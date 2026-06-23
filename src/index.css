@@ -1,0 +1,170 @@
+/* Self-hosted fonts (perf budget: no render-blocking Google Fonts request) */
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/inter';
+@import '@fontsource/instrument-serif/400-italic.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-ink: #131110;
+    --bg-surface: #1c1916;
+    --bg-raised: #26211a;
+    --border-subtle: rgba(250, 244, 232, 0.07);
+    --text-primary: #f1eadc;
+    --text-secondary: #b3a998;
+    --text-tertiary: #6e665b;
+    --amber: #e6b17e;
+    --signal: #e0905e;
+    --synapse: #5fd0be;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Native scrollbar hidden — the Continental GT journey rail is the progress indicator. */
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  body {
+    /* Warm espresso base — a lit cinematic room, not an OLED panel. Ambient light is layered
+       on top by <AtmosphereBackground />. */
+    background-color: var(--bg-ink);
+    color: var(--text-secondary);
+    font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 {
+    color: var(--text-primary);
+    font-family: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+    border-radius: 5px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background: rgba(230, 177, 126, 0.22);
+    color: var(--text-primary);
+  }
+
+  /* When the custom cursor is active, hide the native cursor. */
+  body.has-custom-cursor,
+  body.has-custom-cursor * {
+    cursor: none !important;
+  }
+
+  /* Honor reduced-motion globally — one switch kills aurora, breathing, rider, Lenis, cursor lag. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-edge {
+    @apply mx-auto w-full max-w-content px-5 sm:px-8;
+  }
+
+  .section {
+    @apply relative scroll-mt-24 py-24 md:py-36;
+  }
+
+  /* Editorial kicker — warm amber, demoted from terminal-mono. */
+  .eyebrow {
+    @apply text-eyebrow font-medium uppercase;
+    color: rgba(230, 177, 126, 0.85);
+  }
+
+  /* Soft lit glass — warm light falls on the surface (top highlight + gradient), depth via shadow. */
+  .card {
+    @apply rounded-2xl border border-border-subtle;
+    box-shadow: 0 1px 0 0 rgba(255, 250, 240, 0.05) inset, 0 30px 60px -28px rgba(0, 0, 0, 0.78);
+    background-image: linear-gradient(180deg, rgba(255, 250, 240, 0.035), rgba(255, 250, 240, 0) 42%),
+      linear-gradient(180deg, var(--bg-surface), var(--bg-surface));
+  }
+
+  .glass {
+    background: rgba(28, 25, 22, 0.55);
+    backdrop-filter: blur(20px) saturate(135%);
+    -webkit-backdrop-filter: blur(20px) saturate(135%);
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-white/[0.02] px-3 py-1 font-mono text-[0.78rem] text-secondary;
+  }
+
+  .grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: 0.05;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-raised focus:px-4 focus:py-2 focus:text-primary;
+  }
+
+  /* Warm gradient used for the serif accent and key highlights (was teal->violet). */
+  .text-gradient {
+    background: linear-gradient(100deg, var(--amber), var(--signal));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .serif-accent {
+    @apply font-serif italic;
+    background: linear-gradient(100deg, #f3d9b8, var(--amber) 55%, var(--signal));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* ---- Performance tiers (class set on <html> by lib/device.js) ---- */
+/* Drop the full-screen blend-mode grain on weaker GPUs. */
+.perf-mid .grain,
+.perf-low .grain {
+  display: none;
+}
+/* backdrop-filter re-samples the page on scroll — the biggest low-end cost. Kill it on low. */
+.perf-low [class*='backdrop-blur'],
+.perf-low .glass {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.perf-low .glass {
+  background: rgba(20, 18, 15, 0.92);
+}
+/* Freeze ambient looping animations on low. */
+.perf-low [class*='animate-drift'],
+.perf-low .animate-breathe,
+.perf-low .animate-float {
+  animation: none !important;
+}
