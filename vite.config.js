@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react'
 //  - GitHub project pages at a subpath            -> https://<user>.github.io/<repo>/
 // No client-side router is used (single-page anchor scroll), so no SPA 404 fallback is needed.
 export default defineConfig({
-  base: './',
+  base: '/gokul-portfolio-v2/',
   plugins: [react()],
   build: {
     outDir: 'dist',
