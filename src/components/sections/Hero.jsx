@@ -25,10 +25,13 @@ function Headline() {
           const isSerif = w.replace(/[^a-zA-Z]/g, '') === hero.headlineSerif
           return (
             <span key={i} className="inline-flex overflow-hidden pb-[0.2em] align-baseline" style={{ marginBottom: '-0.2em' }}>
-              <motion.span variants={maskRise} className={`inline-block ${isSerif ? 'serif-accent pr-[0.06em]' : ''}`}>
-                {w}
-                {' '}
-              </motion.span>
+              <motion.span
+  variants={maskRise}
+  className={`inline-block mr-[0.2em] ${isSerif ? 'serif-accent pr-[0.06em]' : ''}`}
+>
+  {w}
+  {' '}
+</motion.span>
             </span>
           )
         })}
