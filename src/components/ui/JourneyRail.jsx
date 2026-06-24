@@ -10,7 +10,7 @@ import bikeImg from '../../bike.png'
 
 function Sparkle({ filled }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
       <path
         d="M12 1.5 L13.8 9.6 L22 12 L13.8 14.4 L12 22.5 L10.2 14.4 L2 12 L10.2 9.6 Z"
         fill={filled ? '#E6B17E' : 'none'}
@@ -78,14 +78,14 @@ export default function JourneyRail() {
       aria-label="Section progress"
       className="pointer-events-none fixed right-20 top-1/2 z-40 hidden h-[58vh] max-h-[560px] min-h-[380px] -translate-y-1/2 md:block"
     >
-      <div className="relative h-full w-12">
+      <div className="relative h-full w-20">
         {/* the road */}
-        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-border-subtle" aria-hidden="true" />
+        <span className="absolute left-1/2 top-0 h-full w-[3px] -translate-x-1/2 bg-border-subtle" aria-hidden="true" />
         {/* warm light trail (filled distance) */}
         <span
           ref={trailRef}
           aria-hidden="true"
-          className="absolute left-1/2 top-0 w-px -translate-x-1/2"
+          className="absolute left-1/2 top-0 w-[3px] -translate-x-1/2"
           style={{
             height: '0%',
             background: 'linear-gradient(180deg, rgba(230,177,126,0.9), rgba(224,144,94,0.5))',
@@ -122,7 +122,7 @@ export default function JourneyRail() {
           className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{ top: '0%', transition: reduce ? 'none' : 'top 0.22s cubic-bezier(0.19,1,0.22,1)' }}
         >
-          <img src={bikeImg} alt="" className="w-48 drop-shadow-[0_0_28px_rgba(230,177,126,0.55)]" />
+          <img src={bikeImg} alt="" className="w-58 drop-shadow-[0_0_28px_rgba(230,177,126,0.55)]" />
         </span>
       </div>
     </aside>
