@@ -17,7 +17,20 @@ function AnchorScroll() {
       const target = document.querySelector(id)
       if (!target) return
       e.preventDefault()
-      lenis.scrollTo(target, { offset: -90, duration: 1.1 })
+      // No extra offset — Lenis already honors the section's scroll-margin-top.
+      const margin = Number.parseFloat(getComputedStyle(target).scrollMarginTop) || 0
+      lenis.scrollTo(target, {
+        duration: 1.1,
+        // Sections use content-visibility:auto, so layout can settle just after the
+        // scroll ends — converge with a short corrective pass if we landed off.
+        onComplete: () => {
+          setTimeout(() => {
+            if (Math.abs(target.getBoundingClientRect().top - margin) > 4) {
+              lenis.scrollTo(target, { duration: 0.3 })
+            }
+          }, 120)
+        },
+      })
       history.pushState(null, '', id)
     }
     document.addEventListener('click', onClick)
@@ -32,7 +45,8 @@ export default function SmoothScroll({ children }) {
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   // Native scroll on low-end / reduced-motion — Lenis can feel laggy on weak hardware.
-  if (prefersReduced || getDeviceTier() === 'low') return children
+  // (During build-time prerender there is no window; render children as-is.)
+  if (typeof window === 'undefined' || prefersReduced || getDeviceTier() === 'low') return children
 
   return (
     <ReactLenis

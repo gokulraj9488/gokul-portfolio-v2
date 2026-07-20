@@ -1,5 +1,5 @@
-// Lit-glass surface (via .card utility: gradient + top highlight + soft shadow, not a hard border).
-// Optional spotlight-on-hover (mouse-follow radial highlight) + a subtle premium lift.
+// Flat engineering surface (via .card utility). Optional hover treatment is a border
+// shift + faint pointer-follow light — small and fast, never a lift-and-bounce.
 import { useRef } from 'react'
 
 export default function Card({ children, className = '', spotlight = false, as = 'div', ...props }) {
@@ -17,18 +17,18 @@ export default function Card({ children, className = '', spotlight = false, as =
     <Tag
       ref={ref}
       onMouseMove={onMouseMove}
-      className={`card group relative overflow-hidden transition duration-300 ease-premium ${
-        spotlight ? 'hover:-translate-y-1 hover:border-white/12 hover:shadow-float' : ''
+      className={`card group relative overflow-hidden transition-colors duration-200 ease-smooth ${
+        spotlight ? 'hover:border-border-strong' : ''
       } ${className}`}
       {...props}
     >
       {spotlight && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           style={{
             background:
-              'radial-gradient(240px circle at var(--mx,50%) var(--my,50%), rgba(230,177,126,0.12), transparent 70%)',
+              'radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.045), transparent 70%)',
           }}
         />
       )}

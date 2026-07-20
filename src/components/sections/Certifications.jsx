@@ -11,7 +11,7 @@ export default function Certifications() {
         <SectionHeader eyebrow="Certifications" title="Credentials, quickly." />
 
         <motion.ul
-          variants={stagger(0.06)}
+          variants={stagger(0.05)}
           initial="hidden"
           whileInView="show"
           viewport={inView}
@@ -22,17 +22,17 @@ export default function Certifications() {
               key={c.name}
               variants={fadeUp}
               className={`flex items-center gap-3 rounded-xl border bg-surface px-4 py-3 ${
-                c.featured ? 'border-amber/30' : 'border-border-subtle'
+                c.featured ? 'border-ember/30' : 'border-border-subtle'
               }`}
             >
               <BadgeCheck
                 size={18}
-                className={c.featured ? 'flex-none text-amber' : 'flex-none text-tertiary'}
+                className={c.featured ? 'flex-none text-ember' : 'flex-none text-tertiary'}
                 aria-hidden="true"
               />
               <div className="min-w-0">
                 <p className="truncate text-sm text-primary">{c.name}</p>
-                <p className="font-mono text-[0.68rem] text-tertiary">{c.issuer}</p>
+                <p className="font-mono text-[0.66rem] text-tertiary">{c.issuer}</p>
               </div>
             </motion.li>
           ))}

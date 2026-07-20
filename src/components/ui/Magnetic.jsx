@@ -1,15 +1,15 @@
 import { useRef } from 'react'
 import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
 
-// Magnetic wrapper — the element gently pulls toward the cursor within its bounds, springs back on leave.
-// Inert on touch (no mousemove) and under reduced motion. Keep strength subtle (premium, not gimmicky).
-export default function Magnetic({ children, strength = 0.28, className = '' }) {
+// Magnetic wrapper — the element leans gently toward the cursor, springs back on leave.
+// Inert on touch (no mousemove) and under reduced motion. Keep strength subtle.
+export default function Magnetic({ children, strength = 0.22, className = '' }) {
   const ref = useRef(null)
   const reduce = useReducedMotion()
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const sx = useSpring(x, { stiffness: 220, damping: 18, mass: 0.4 })
-  const sy = useSpring(y, { stiffness: 220, damping: 18, mass: 0.4 })
+  const sx = useSpring(x, { stiffness: 260, damping: 20, mass: 0.4 })
+  const sy = useSpring(y, { stiffness: 260, damping: 20, mass: 0.4 })
 
   const onMove = (e) => {
     if (reduce || !ref.current) return

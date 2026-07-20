@@ -1,42 +1,79 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import { hero, profile } from '../../data/site.js'
-import { stagger, maskRise, fadeUp, easePremium } from '../../lib/motion.js'
-import PipelineDiagram from '../ui/PipelineDiagram.jsx'
-import ProfileCard from '../ui/ProfileCard.jsx'
-import MetricStrip from '../ui/MetricStrip.jsx'
+import { ArrowRight, Github } from 'lucide-react'
+import { hero, bench } from '../../data/site.js'
+import { easePremium } from '../../lib/motion.js'
+import { Link } from '../../lib/router.jsx'
 import Magnetic from '../ui/Magnetic.jsx'
+import Tilt from '../ui/Tilt.jsx'
+import CountUp from '../ui/CountUp.jsx'
+import MetricStrip from '../ui/MetricStrip.jsx'
+import { DraftCorners, Crosshair, Note, Measure, TitleBlock, Sparks } from '../ui/Draft.jsx'
 
-const heroNodes = [
-  { id: 'data', label: 'BigQuery', detail: 'governed, queryable data', layer: 'data' },
-  { id: 'pipeline', label: 'Dataflow', detail: 'pipelines that move it', layer: 'data' },
-  { id: 'model', label: 'Groq LLM', detail: 'models that reason', layer: 'intelligence' },
-  { id: 'product', label: 'React', detail: 'products people use', layer: 'product' },
-]
-
-// Editorial headline — capped responsive size + measure forces a clean 3-4 line wrap (not 7 tiny lines).
-function Headline() {
-  const words = hero.headline.split(' ')
+// Dashed connector between bench nodes — data flowing along the loop.
+function FlowJoint() {
   return (
-    <h1 className="max-w-[14ch] font-display text-[clamp(2.15rem,7vw,2.75rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-primary [text-wrap:balance] sm:max-w-[18ch] sm:text-[clamp(2.75rem,6vw,3.75rem)] lg:max-w-[15ch] lg:text-[clamp(3.25rem,4.4vw,4.25rem)]">
-      <motion.span variants={stagger(0.05, 0.15)} initial="hidden" animate="show">
-        {words.map((w, i) => {
-          const isSerif = w.replace(/[^a-zA-Z]/g, '') === hero.headlineSerif
-          return (
-            <span key={i} className="inline-flex overflow-hidden pb-[0.2em] align-baseline" style={{ marginBottom: '-0.2em' }}>
-              <motion.span
-  variants={maskRise}
-  className={`inline-block mr-[0.2em] ${isSerif ? 'serif-accent pr-[0.06em]' : ''}`}
->
-  {w}
-  {' '}
-</motion.span>
+    <svg aria-hidden="true" width="22" height="8" className="mx-1 flex-none text-ember/70">
+      <line x1="0" y1="4" x2="22" y2="4" stroke="currentColor" strokeWidth="1.4" className="flow-line animate-flow" />
+    </svg>
+  )
+}
+
+// The workbench: one sheet from the drafting table — the loop the flagship owns.
+function BenchSheet() {
+  return (
+    <Tilt max={3}>
+      <div className="card grid-bed relative overflow-hidden shadow-float">
+        <DraftCorners />
+        <Crosshair x="38%" y="14%" />
+        <Crosshair x="82%" y="62%" />
+
+        <div className="relative p-5 sm:p-6">
+          {/* sheet header */}
+          <div className="flex items-start justify-between gap-3">
+            <p className="font-mono text-[0.66rem] uppercase tracking-[0.16em] text-tertiary">{bench.sheetLabel}</p>
+            <Note rotate={2} className="-mt-1 text-right">
+              {bench.note}
+            </Note>
+          </div>
+
+          {/* the loop */}
+          <div className="mt-6 flex flex-wrap items-center gap-y-2.5">
+            {bench.nodes.map((n, i) => (
+              <span key={n} className="flex items-center">
+                <span className="rounded-md border border-border-subtle bg-ink px-3 py-1.5 font-mono text-[0.76rem] text-primary">
+                  {n}
+                </span>
+                {i < bench.nodes.length - 1 && <FlowJoint />}
+              </span>
+            ))}
+          </div>
+
+          {/* run shape — counts up when seen */}
+          <div className="mt-6 grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-border-subtle bg-border-subtle">
+            {bench.metrics.map((m) => (
+              <div key={m.label} className="bg-ink-deep/60 px-3 py-3">
+                <p className="font-display text-lg font-semibold text-primary">
+                  <CountUp value={m.value} decimals={m.decimals} suffix={m.suffix} />
+                </p>
+                <p className="mt-0.5 font-mono text-[0.62rem] uppercase tracking-wider text-tertiary">{m.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* on the bench right now */}
+          <p className="mt-5 flex items-center gap-2 font-mono text-[0.72rem] text-secondary">
+            <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ember opacity-50" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-ember" />
             </span>
-          )
-        })}
-      </motion.span>
-    </h1>
+            now building: {hero.now}
+          </p>
+        </div>
+
+        <TitleBlock fields={bench.titleBlock} />
+      </div>
+    </Tilt>
   )
 }
 
@@ -44,69 +81,78 @@ export default function Hero() {
   const ref = useRef(null)
   const reduce = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const yDepart = useTransform(scrollYProgress, [0, 1], [0, -50])
-  const fadeDepart = useTransform(scrollYProgress, [0, 0.8], [1, 0.35])
+  const glowY = useTransform(scrollYProgress, [0, 1], [0, 90])
 
   return (
     <section id="hero" ref={ref} className="relative scroll-mt-24">
+      {/* forge glow — drifts slightly as you leave the fold */}
       <motion.div
-        style={reduce ? undefined : { y: yDepart, opacity: fadeDepart }}
-        className="container-edge flex min-h-[100svh] flex-col justify-start pb-20 pt-28 sm:pt-32 md:pt-36 lg:justify-center"
+        aria-hidden="true"
+        // x lives inside the motion style — framer owns the whole transform, so a
+        // Tailwind translate class would be silently overwritten (and overflow the page).
+        style={reduce ? { x: '-50%' } : { y: glowY, x: '-50%' }}
+        className="pointer-events-none absolute left-1/2 top-[-18%] -z-10 h-[46vw] w-[70vw] rounded-full blur-[130px]"
       >
-        <div className="grid items-start gap-12 lg:gap-16 lg:grid-cols-[1.08fr_0.92fr]">
-          {/* Left: copy */}
-          <div className="flex flex-col gap-6 sm:gap-7">
-            <motion.span
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: easePremium }}
-              className="eyebrow"
-            >
-              {hero.eyebrow}
-            </motion.span>
+        <div className="h-full w-full animate-forge-breathe rounded-full" style={{ background: 'radial-gradient(closest-side, rgba(226,164,90,0.1), transparent 70%)' }} />
+      </motion.div>
 
-            <Headline />
+      <Sparks count={4} className="[mask-image:linear-gradient(to_top,black,transparent_60%)]" />
 
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: easePremium, delay: 0.5 }}
-              className="max-w-md text-body-lg text-secondary sm:max-w-xl"
-            >
-              {hero.subhead}
-            </motion.p>
+      <div className="container-edge flex min-h-[92svh] flex-col justify-center pb-16 pt-32 sm:pt-36">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          {/* Left: the claim — renders instantly, no entrance animation on the words that matter */}
+          <div className="flex flex-col gap-6">
+            <span className="eyebrow">{hero.eyebrow}</span>
+
+            <div>
+              <h1 className="max-w-[19ch] font-display text-display font-semibold text-primary [text-wrap:balance]">
+                {hero.headline}
+              </h1>
+              <Note className="ml-1 mt-3 whitespace-pre-line">{hero.headlineNote}</Note>
+            </div>
+
+            <p className="max-w-xl text-body-lg text-secondary">{hero.subhead}</p>
 
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: easePremium, delay: 0.66 }}
+              transition={{ duration: 0.5, ease: easePremium, delay: 0.15 }}
               className="flex flex-wrap items-center gap-3"
             >
-              <Magnetic strength={0.4}>
-                <a
-                  href={hero.primaryCta.href}
-                  className="group inline-flex items-center gap-2 rounded-xl bg-amber px-6 py-3.5 text-sm font-semibold text-ink transition duration-300 ease-premium hover:shadow-glow"
+              <Magnetic>
+                <Link
+                  to={hero.primaryCta.href}
+                  className="btn-sparks group inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3.5 text-sm font-semibold text-ink transition duration-200 hover:bg-white"
                 >
+                  <span className="sp" aria-hidden="true" />
+                  <span className="sp" aria-hidden="true" />
+                  <span className="sp" aria-hidden="true" />
                   {hero.primaryCta.label}
-                  <ArrowRight size={16} className="transition-transform duration-300 ease-premium group-hover:translate-x-1" />
-                </a>
+                  <ArrowRight size={15} className="transition-transform duration-200 ease-premium group-hover:translate-x-0.5" />
+                </Link>
               </Magnetic>
               <a
                 href={hero.secondaryCta.href}
-                className="inline-flex items-center gap-2 rounded-xl border border-border-subtle px-6 py-3.5 text-sm font-medium text-primary transition duration-300 ease-premium hover:border-amber/30 hover:bg-white/[0.03]"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-border-subtle px-6 py-3.5 text-sm font-medium text-primary transition duration-200 hover:border-border-strong hover:bg-white/[0.03]"
               >
+                <Github size={15} />
                 {hero.secondaryCta.label}
               </a>
+              {/* a mechanic's note pinned near the tools — the terminal lives here too */}
+              <Note rotate={-3} className="text-[0.78rem]">
+                psst… press /
+              </Note>
             </motion.div>
 
-            {/* credibility — desktop only (the card already carries 'Currently @ TCS' + chips on mobile) */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 1, ease: easePremium, delay: 0.85 }}
-              className="mt-3 hidden flex-col gap-3 border-t border-border-subtle pt-5 lg:flex"
+              transition={{ duration: 0.55, ease: easePremium, delay: 0.3 }}
+              className="mt-2 flex flex-col gap-4 border-t border-border-subtle pt-5"
             >
-              <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.78rem] text-tertiary">
+              <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.74rem] text-tertiary">
                 {hero.credibility.map((c, i) => (
                   <li key={c} className="flex items-center gap-2">
                     {i > 0 && <span aria-hidden="true" className="text-tertiary/50">·</span>}
@@ -114,61 +160,31 @@ export default function Hero() {
                   </li>
                 ))}
               </ul>
+              <Measure label={hero.measure} className="max-w-sm" />
             </motion.div>
           </div>
 
-          {/* Right: ONE composition — identity (card) -> status -> system (pipeline) */}
+          {/* Right: the workbench */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: easePremium, delay: 0.4 }}
-            className="relative lg:mt-2"
+            transition={{ duration: 0.6, ease: easePremium, delay: 0.1 }}
           >
-            {/* shared warm light bed (responsive bleed so it never pushes past a 360px viewport) */}
-            <div
-              aria-hidden="true"
-              className="absolute -inset-4 -z-10 sm:-inset-8"
-              style={{ background: 'radial-gradient(58% 56% at 62% 28%, rgba(230,177,126,0.09), transparent 72%)' }}
-            />
-            <div className="flex flex-col gap-4 sm:gap-5">
-              <ProfileCard />
-
-              {/* middle 'status' beat — always visible on touch (desktop uses the card's hover panel) */}
-              <div className="flex justify-center lg:hidden">
-                <span className="inline-flex items-center gap-2 rounded-full border border-amber/20 bg-raised/60 px-4 py-2 text-sm">
-                  <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-synapse opacity-60" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-synapse" />
-                  </span>
-                  <span className="serif-accent">Open to work.</span>
-                  <span className="text-secondary">{profile.availableLabel}</span>
-                </span>
-              </div>
-
-              {/* connector — warm identity flowing into the cool technical core */}
-              <div className="relative mx-auto h-7 w-px" aria-hidden="true">
-                <span className="absolute inset-0 bg-gradient-to-b from-amber/60 to-synapse/50" />
-                <span className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber shadow-glow-soft" />
-              </div>
-
-              <PipelineDiagram
-                nodes={heroNodes}
-                ariaLabel="My stack as a system: BigQuery to Dataflow to Groq LLM to React — data becomes decisions, decisions become products."
-              />
-            </div>
+            <BenchSheet />
+            <p className="mt-3 text-center font-mono text-[0.68rem] text-tertiary">{bench.caption}</p>
           </motion.div>
         </div>
 
         <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.55, ease: easePremium }}
           className="mt-16 sm:mt-20"
         >
           <MetricStrip />
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }

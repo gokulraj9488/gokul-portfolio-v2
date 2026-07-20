@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { applyPerfClass } from './lib/device.js'
@@ -7,8 +7,16 @@ import { applyPerfClass } from './lib/device.js'
 // Tag <html> with the device tier before first paint so CSS gates effects with no flash.
 applyPerfClass()
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const container = document.getElementById('root')
+const app = (
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
 )
+
+// Prerendered HTML (scripts/prerender.mjs) hydrates; a bare shell mounts fresh.
+if (container.hasChildNodes()) {
+  hydrateRoot(container, app)
+} else {
+  createRoot(container).render(app)
+}

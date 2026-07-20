@@ -4,42 +4,40 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm Cinematic, Cool Core. Tokens mirror src/index.css custom properties.
-        ink: '#131110', // warm espresso-black page (never pure black)
-        'ink-deep': '#0C0A09', // deepest pockets / vignette
-        surface: '#1C1916', // cards
-        raised: '#26211A', // elevated / hover glass
-        'border-subtle': 'rgba(250,244,232,0.07)',
-        primary: '#F1EADC', // text — warm ivory
-        secondary: '#B3A998', // body — warm taupe
-        tertiary: '#6E665B', // meta
-        amber: '#E6B17E', // THE warm accent — glow, CTAs, highlights
-        'amber-deep': '#C8893F', // amber where solid contrast is needed
-        signal: '#E0905E', // warm copper — gradient endpoint (replaces old violet)
-        synapse: '#5FD0BE', // cool tech accent — pipeline / AI labels / live dot ONLY
-        status: '#6FCF97', // "live in production" badge
+        // The workshop surface system — near-black warmed a degree toward the forge.
+        // Tokens mirror src/index.css custom properties.
+        ink: '#0B0A09', // page — warm near-black
+        'ink-deep': '#070606', // deepest pockets / drawing beds
+        surface: '#121110', // cards
+        raised: '#1A1815', // elevated / hover
+        'border-subtle': 'rgba(255,250,240,0.08)',
+        'border-strong': 'rgba(255,250,240,0.15)',
+        primary: '#EFEDE8', // headings / key text — warm ivory
+        secondary: '#A6A29A', // body — warm gray
+        tertiary: '#8B867D', // meta / labels — 4.5:1+ on ink/surface (WCAG AA)
+        ember: '#E2A45A', // THE accent — the forge. Heat, highlights, active states only.
+        'ember-deep': '#B97F3A', // ember where solid contrast is needed
+        status: '#4ADE80', // live / passing
       },
       fontFamily: {
         display: ['"Space Grotesk Variable"', 'Space Grotesk', 'system-ui', 'sans-serif'],
         sans: ['"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
-        serif: ['"Instrument Serif"', 'Georgia', 'serif'], // editorial italic accent ONLY
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        hand: ['"Architects Daughter"', 'cursive'], // margin notes ONLY — the human hand
       },
       fontSize: {
-        display: ['clamp(3rem, 8vw, 6.25rem)', { lineHeight: '0.98', letterSpacing: '-0.035em' }],
-        h1: ['clamp(2rem, 4.4vw, 3.25rem)', { lineHeight: '1.05', letterSpacing: '-0.02em' }],
-        h2: ['clamp(1.5rem, 2.8vw, 2rem)', { lineHeight: '1.15', letterSpacing: '-0.01em' }],
-        'body-lg': ['1.175rem', { lineHeight: '1.7' }],
-        eyebrow: ['0.78rem', { lineHeight: '1.4', letterSpacing: '0.22em' }],
+        display: ['clamp(2.6rem, 6vw, 4.5rem)', { lineHeight: '1.06', letterSpacing: '-0.03em' }],
+        h1: ['clamp(1.9rem, 3.6vw, 2.75rem)', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        h2: ['clamp(1.4rem, 2.4vw, 1.8rem)', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        'body-lg': ['1.125rem', { lineHeight: '1.7' }],
+        eyebrow: ['0.72rem', { lineHeight: '1.4', letterSpacing: '0.18em' }],
       },
-      maxWidth: { content: '1140px' },
-      borderRadius: { xl: '0.875rem', '2xl': '1.5rem', '3xl': '1.875rem' },
+      maxWidth: { content: '1120px' },
+      borderRadius: { xl: '0.75rem', '2xl': '1rem', '3xl': '1.5rem' },
       boxShadow: {
-        glow: '0 0 50px rgba(230,177,126,0.22)', // warm amber bloom
-        'glow-soft': '0 0 30px rgba(230,177,126,0.14)',
-        'glow-teal': '0 0 30px rgba(95,208,190,0.18)', // cool — pipeline/AI only
-        lift: '0 1px 0 0 rgba(255,250,240,0.05) inset, 0 30px 60px -28px rgba(0,0,0,0.78)',
-        float: '0 1px 0 0 rgba(255,250,240,0.07) inset, 0 44px 90px -40px rgba(0,0,0,0.85)',
+        lift: '0 1px 0 0 rgba(255,250,240,0.04) inset, 0 24px 48px -24px rgba(0,0,0,0.7)',
+        float: '0 1px 0 0 rgba(255,250,240,0.06) inset, 0 32px 64px -32px rgba(0,0,0,0.8)',
+        'glow-ember': '0 0 32px rgba(226,164,90,0.18)',
       },
       transitionTimingFunction: {
         out: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -47,20 +45,17 @@ export default {
         smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
       keyframes: {
-        'drift-a': { '0%': { transform: 'translate3d(0,0,0) scale(1)' }, '100%': { transform: 'translate3d(6%, 4%, 0) scale(1.12)' } },
-        'drift-b': { '0%': { transform: 'translate3d(0,0,0) scale(1.05)' }, '100%': { transform: 'translate3d(-5%, 6%, 0) scale(0.95)' } },
-        'drift-c': { '0%': { transform: 'translate3d(0,0,0) scale(1)' }, '100%': { transform: 'translate3d(4%, -5%, 0) scale(1.1)' } },
-        breathe: { '0%, 100%': { opacity: '0.55', transform: 'scale(1)' }, '50%': { opacity: '0.9', transform: 'scale(1.06)' } },
-        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
-        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+        'pulse-soft': { '0%, 100%': { opacity: '0.35' }, '50%': { opacity: '1' } },
+        flow: { to: { strokeDashoffset: '-24' } },
+        'forge-breathe': {
+          '0%, 100%': { opacity: '0.5', transform: 'scale(1)' },
+          '50%': { opacity: '0.85', transform: 'scale(1.04)' },
+        },
       },
       animation: {
-        'drift-a': 'drift-a 24s ease-in-out infinite alternate',
-        'drift-b': 'drift-b 28s ease-in-out infinite alternate',
-        'drift-c': 'drift-c 22s ease-in-out infinite alternate',
-        breathe: 'breathe 5s ease-in-out infinite',
-        float: 'float 7s ease-in-out infinite',
-        shimmer: 'shimmer 3s linear infinite',
+        'pulse-soft': 'pulse-soft 2.4s ease-in-out infinite',
+        flow: 'flow 1.6s linear infinite',
+        'forge-breathe': 'forge-breathe 5s ease-in-out infinite',
       },
     },
   },

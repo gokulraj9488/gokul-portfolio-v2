@@ -1,9 +1,9 @@
 /* Self-hosted fonts (perf budget: no render-blocking Google Fonts request) */
 @import '@fontsource-variable/space-grotesk';
 @import '@fontsource-variable/inter';
-@import '@fontsource/instrument-serif/400-italic.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/architects-daughter/400.css';
 
 @tailwind base;
 @tailwind components;
@@ -11,66 +11,52 @@
 
 @layer base {
   :root {
-    --bg-ink: #131110;
-    --bg-surface: #1c1916;
-    --bg-raised: #26211a;
-    --border-subtle: rgba(250, 244, 232, 0.07);
-    --text-primary: #f1eadc;
-    --text-secondary: #b3a998;
-    --text-tertiary: #6e665b;
-    --amber: #e6b17e;
-    --signal: #e0905e;
-    --synapse: #5fd0be;
+    --bg-ink: #0b0a09;
+    --bg-surface: #121110;
+    --bg-raised: #1a1815;
+    --border-subtle: rgba(255, 250, 240, 0.08);
+    --text-primary: #efede8;
+    --text-secondary: #a6a29a;
+    --text-tertiary: #8b867d;
+    --ember: #e2a45a;
+    --status: #4ade80;
   }
 
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    /* Native scrollbar hidden — the Continental GT journey rail is the progress indicator. */
-    scrollbar-width: none;
-  }
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 250, 240, 0.15) transparent;
   }
 
   body {
-    /* Warm espresso base — a lit cinematic room, not an OLED panel. Ambient light is layered
-       on top by <AtmosphereBackground />. */
     background-color: var(--bg-ink);
     color: var(--text-secondary);
     font-family: 'Inter Variable', Inter, system-ui, sans-serif;
     overflow-x: hidden;
   }
 
-  h1, h2, h3 {
+  h1, h2, h3, h4 {
     color: var(--text-primary);
     font-family: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
   }
 
   :focus-visible {
-    outline: 2px solid var(--amber);
+    outline: 2px solid var(--ember);
     outline-offset: 3px;
-    border-radius: 5px;
+    border-radius: 4px;
   }
   :focus:not(:focus-visible) {
     outline: none;
   }
 
   ::selection {
-    background: rgba(230, 177, 126, 0.22);
+    background: rgba(226, 164, 90, 0.24);
     color: var(--text-primary);
   }
 
-  /* When the custom cursor is active, hide the native cursor. */
-  body.has-custom-cursor,
-  body.has-custom-cursor * {
-    cursor: none !important;
-  }
-
-  /* Honor reduced-motion globally — one switch kills aurora, breathing, rider, Lenis, cursor lag. */
+  /* Honor reduced-motion globally — one switch kills ambient motion, reveals, Lenis. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -89,70 +75,303 @@
   }
 
   .section {
-    @apply relative scroll-mt-24 py-24 md:py-36;
+    @apply relative scroll-mt-24 py-20 md:py-28;
+    /* Skip layout/paint for off-screen sections — big TBT win on the long pages. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
   }
 
-  /* Editorial kicker — warm amber, demoted from terminal-mono. */
+  /* Mono kicker — quiet, technical. */
   .eyebrow {
-    @apply text-eyebrow font-medium uppercase;
-    color: rgba(230, 177, 126, 0.85);
+    @apply font-mono text-eyebrow font-medium uppercase text-tertiary;
   }
 
-  /* Soft lit glass — warm light falls on the surface (top highlight + gradient), depth via shadow. */
+  /* Flat engineering surface — hairline border, faint top light, restrained depth. */
   .card {
     @apply rounded-2xl border border-border-subtle;
-    box-shadow: 0 1px 0 0 rgba(255, 250, 240, 0.05) inset, 0 30px 60px -28px rgba(0, 0, 0, 0.78);
-    background-image: linear-gradient(180deg, rgba(255, 250, 240, 0.035), rgba(255, 250, 240, 0) 42%),
+    background-image: linear-gradient(180deg, rgba(255, 250, 240, 0.025), rgba(255, 250, 240, 0) 36%),
       linear-gradient(180deg, var(--bg-surface), var(--bg-surface));
   }
 
   .glass {
-    background: rgba(28, 25, 22, 0.55);
-    backdrop-filter: blur(20px) saturate(135%);
-    -webkit-backdrop-filter: blur(20px) saturate(135%);
+    background: rgba(11, 10, 9, 0.72);
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
   }
 
   .pill {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-white/[0.02] px-3 py-1 font-mono text-[0.78rem] text-secondary;
-  }
-
-  .grain {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
-    opacity: 0.05;
+    @apply inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-white/[0.02] px-2.5 py-1 font-mono text-[0.74rem] text-secondary;
   }
 
   .skip-link {
     @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-raised focus:px-4 focus:py-2 focus:text-primary;
   }
 
-  /* Warm gradient used for the serif accent and key highlights (was teal->violet). */
-  .text-gradient {
-    background: linear-gradient(100deg, var(--amber), var(--signal));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+  /* Faint blueprint grid for drawing beds. */
+  .grid-bed {
+    background-image: linear-gradient(rgba(255, 250, 240, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 250, 240, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 
-  .serif-accent {
-    @apply font-serif italic;
-    background: linear-gradient(100deg, #f3d9b8, var(--amber) 55%, var(--signal));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    font-weight: 400;
-    letter-spacing: 0.01em;
+  /* Animated data-flow stroke for architecture diagrams (pairs with animate-flow). */
+  .flow-line {
+    stroke-dasharray: 5 7;
+  }
+
+  /* The human hand — margin notes only. Slightly rotated, never body copy. */
+  .note {
+    font-family: 'Architects Daughter', cursive;
+    @apply text-[0.92rem] leading-snug text-ember/80;
+  }
+
+  /* Paper wobble — the note breathes at its pinned rotation (--note-rot),
+     never a fixed inline transform, so this keyframe can drive it. */
+  .note-wobble {
+    transform: rotate(var(--note-rot, -2deg));
+    animation: paper-wobble 7s ease-in-out infinite;
+  }
+
+  /* Popup content scrolls independently and never leaks to the page behind it
+     (pairs with useScrollLock, which freezes <body> while a popup is open). */
+  .scroll-contain {
+    overscroll-behavior: contain;
+  }
+
+  /* Engineering-drawing title block (bottom strip of a drawing sheet). */
+  .title-block {
+    @apply flex flex-wrap items-stretch divide-x divide-border-subtle border-t border-border-subtle font-mono text-[0.62rem] uppercase tracking-[0.1em] text-tertiary;
+  }
+  .title-block > div {
+    @apply px-3 py-2;
   }
 }
+
+/* ---- The play layer: sparks, forge mode, developer mode ---- */
+
+/* Ambient ember sparks — deterministic positions, pure CSS, invisible at rest. */
+.spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: #ecb26a;
+  box-shadow: 0 0 6px rgba(226, 164, 90, 0.8);
+  opacity: 0;
+  animation: spark-rise 4.2s ease-in infinite;
+}
+@keyframes spark-rise {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(1); }
+  12% { opacity: 0.85; }
+  100% { opacity: 0; transform: translate3d(10px, -130px, 0) scale(0.5); }
+}
+
+/* Spark burst on primary buttons — three embers jump off on hover. */
+.btn-sparks { position: relative; }
+.btn-sparks .sp {
+  position: absolute;
+  top: 2px;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--ember);
+  box-shadow: 0 0 5px rgba(226, 164, 90, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+.btn-sparks .sp:nth-child(1) { right: 14px; }
+.btn-sparks .sp:nth-child(2) { right: 26px; }
+.btn-sparks .sp:nth-child(3) { right: 40px; }
+.btn-sparks:hover .sp:nth-child(1) { animation: spark-pop-a 0.5s ease-out; }
+.btn-sparks:hover .sp:nth-child(2) { animation: spark-pop-b 0.55s ease-out 0.05s; }
+.btn-sparks:hover .sp:nth-child(3) { animation: spark-pop-c 0.5s ease-out 0.1s; }
+@keyframes spark-pop-a { 0% { opacity: 0.9; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(10px, -18px) scale(0.4); } }
+@keyframes spark-pop-b { 0% { opacity: 0.9; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(-4px, -22px) scale(0.4); } }
+@keyframes spark-pop-c { 0% { opacity: 0.9; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(-14px, -16px) scale(0.4); } }
+
+/* Forge mode — the room heats up. Discovered, never default. */
+.forge-ext { opacity: 0; transition: opacity 1.2s ease; }
+.forge-mode .forge-ext { opacity: 1; }
+.forge-mode .card { border-color: rgba(226, 164, 90, 0.16); }
+.forge-mode .spark { animation-duration: 2.8s; }
+
+/* Developer mode — blueprint annotations on every section (grid + HUD are React). */
+.dev-mode main section[id] {
+  outline: 1px dashed rgba(226, 164, 90, 0.45);
+  outline-offset: -1px;
+}
+.dev-mode main section[id]::before {
+  content: '<section id="' attr(id) '">';
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  z-index: 40;
+  padding: 2px 7px;
+  border: 1px solid rgba(226, 164, 90, 0.35);
+  border-radius: 5px;
+  background: rgba(11, 10, 9, 0.85);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: #e2a45a;
+}
+/* Sections skip offscreen rendering — labels only matter when visible anyway. */
+
+/* Engineering-drawing stamp — inked, slightly rotated, never loud. */
+.stamp {
+  @apply inline-block rounded-md border-2 border-ember/40 px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ember/70;
+  transform: rotate(-6deg);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Cfilter id='r'%3E%3CfeTurbulence baseFrequency='0.6' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.35'/%3E%3C/filter%3E%3Crect width='120' height='40' fill='white'/%3E%3Crect width='120' height='40' filter='url(%23r)'/%3E%3C/svg%3E");
+  mask-size: cover;
+}
+
+/* Ruler strip — tick marks down a drawing's edge. */
+.ruler-y {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 250, 240, 0.22) 0 1px,
+    transparent 1px 8px
+  ),
+  repeating-linear-gradient(
+    to bottom,
+    rgba(255, 250, 240, 0.3) 0 1px,
+    transparent 1px 40px
+  );
+  background-size: 6px 100%, 12px 100%;
+  background-repeat: no-repeat;
+}
+
+/* Authentic terminal cursor — a hard on/off blink (steps), not a soft fade.
+   Used for decorative "resting" cursors in terminal-flavored UI. */
+@keyframes term-cursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.term-cursor {
+  animation: term-cursor 1s steps(1, start) infinite;
+}
+
+@keyframes paper-wobble {
+  0%, 100% { transform: rotate(var(--note-rot, -2deg)); }
+  50% { transform: rotate(calc(var(--note-rot, -2deg) + 0.8deg)); }
+}
+
+/* Bike idle float — a slow, tiny bob. The companion is never quite still. */
+@keyframes bike-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.bike-float {
+  animation: bike-float 3.6s ease-in-out infinite;
+}
+
+/* Scoped blueprint flicker — an old workshop-light flutter, rare and brief.
+   Deliberately NOT applied to the shared .grid-bed base class (used across
+   the site) — only opted into where explicitly wanted (the garage sheet). */
+@keyframes blueprint-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.86; }
+  98% { opacity: 1; }
+  99% { opacity: 0.92; }
+}
+.blueprint-flicker {
+  animation: blueprint-flicker 12s steps(1) infinite;
+}
+
+/* ---- The footer: the workshop's quiet corner, kept visibly alive ---- */
+
+/* A breath of amber along the top edge — discoverable, not loud. */
+.footer-glow {
+  border-top: 1px solid rgba(226, 164, 90, 0.18);
+  box-shadow: 0 -18px 48px -28px rgba(226, 164, 90, 0.22);
+}
+
+/* Idle pulses — each fires ONCE per cycle (~18s), never loops. */
+.pulse-kbd {
+  animation: kbd-pulse 1.4s ease-in-out 1;
+}
+@keyframes kbd-pulse {
+  0%, 100% { border-color: var(--border-subtle); color: var(--text-secondary); box-shadow: none; }
+  40% { border-color: rgba(226, 164, 90, 0.7); color: var(--ember); box-shadow: 0 0 10px rgba(226, 164, 90, 0.35); }
+}
+.pulse-wave { position: relative; }
+.pulse-wave::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 1px solid rgba(226, 164, 90, 0.6);
+  animation: radio-wave 1.3s ease-out 1 0.4s;
+  opacity: 0;
+}
+@keyframes radio-wave {
+  0% { opacity: 0.8; transform: scale(0.7); }
+  100% { opacity: 0; transform: scale(2.1); }
+}
+.pulse-glow {
+  animation: garage-glow 1.5s ease-in-out 1 0.8s;
+}
+@keyframes garage-glow {
+  0%, 100% { filter: none; color: inherit; }
+  45% { filter: drop-shadow(0 0 7px rgba(240, 214, 160, 0.8)); color: var(--ember); }
+}
+
+/* One ember drifting up from the bench edge during a pulse cycle. */
+.footer-ember {
+  animation: spark-rise 2.2s ease-in 1 !important;
+}
+
+/* Tiny "now playing" bars for the workbench radio. */
+.now-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+.now-bars span {
+  width: 2.5px;
+  border-radius: 1px;
+  background: var(--ember);
+  animation: now-bar 1.1s ease-in-out infinite;
+}
+.now-bars span:nth-child(1) { height: 55%; }
+.now-bars span:nth-child(2) { height: 100%; animation-delay: 0.18s; }
+.now-bars span:nth-child(3) { height: 70%; animation-delay: 0.36s; }
+@keyframes now-bar {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
+}
+.perf-low .now-bars span { animation: none; }
+
+/* Nyan — one crossing, transform-only, then gone. */
+.nyan-fly {
+  transform: translateX(-40vw);
+  animation: nyan-cross 6s linear forwards;
+}
+@keyframes nyan-cross {
+  to { transform: translateX(130vw); }
+}
+
+/* Exhaust puffs — the GT650 idling at the forge. */
+.exhaust {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: rgba(200, 195, 185, 0.35);
+  opacity: 0;
+  animation: exhaust-puff 1.6s ease-out infinite;
+}
+@keyframes exhaust-puff {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  20% { opacity: 0.7; }
+  100% { opacity: 0; transform: translate(-10px, -16px) scale(1.7); }
+}
+.perf-low .exhaust { display: none; }
 
 /* ---- Performance tiers (class set on <html> by lib/device.js) ---- */
-/* Drop the full-screen blend-mode grain on weaker GPUs. */
-.perf-mid .grain,
-.perf-low .grain {
-  display: none;
-}
 /* backdrop-filter re-samples the page on scroll — the biggest low-end cost. Kill it on low. */
 .perf-low [class*='backdrop-blur'],
 .perf-low .glass {
@@ -160,11 +379,18 @@
   -webkit-backdrop-filter: none !important;
 }
 .perf-low .glass {
-  background: rgba(20, 18, 15, 0.92);
+  background: rgba(9, 8, 7, 0.94);
 }
 /* Freeze ambient looping animations on low. */
-.perf-low [class*='animate-drift'],
-.perf-low .animate-breathe,
-.perf-low .animate-float {
+.perf-low .animate-pulse-soft,
+.perf-low .animate-flow,
+.perf-low .animate-forge-breathe,
+.perf-low .note-wobble,
+.perf-low .bike-float,
+.perf-low .blueprint-flicker,
+.perf-low .term-cursor {
   animation: none !important;
+}
+.perf-low .spark {
+  display: none;
 }

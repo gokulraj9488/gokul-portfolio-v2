@@ -1,37 +1,28 @@
-// The lit room — warm cinematic. Warm amber/copper ambient light dominates; a single cool teal
-// glow sits upper-right (the technical zone, where the hero pipeline lives). All CSS, behind content.
-// Drift freezes under prefers-reduced-motion (global rule in index.css).
-
+// Restrained ambient light — a single faint ember glow at the top fold and a
+// neutral vignette. Static, cheap, behind everything. No drift, no grain.
 export default function AtmosphereBackground() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      {/* Warm amber key light — upper area */}
+      {/* Ember key light — top center, barely there */}
       <div
-        className="absolute -right-[8%] -top-[20%] h-[60vw] w-[60vw] rounded-full blur-[150px] animate-drift-a"
-        style={{ background: 'radial-gradient(circle at center, rgba(230,177,126,0.16), transparent 62%)' }}
+        className="absolute left-1/2 top-[-28%] h-[62vw] w-[86vw] -translate-x-1/2 rounded-full blur-[140px]"
+        style={{ background: 'radial-gradient(closest-side, rgba(226,164,90,0.07), transparent 70%)' }}
       />
-      {/* Warm copper fill — lower left */}
+      {/* Forge mode — an extra layer of heat, off until someone finds the hammer */}
       <div
-        className="absolute -left-[16%] top-[40%] h-[54vw] w-[54vw] rounded-full blur-[160px] animate-drift-b"
-        style={{ background: 'radial-gradient(circle at center, rgba(224,144,94,0.13), transparent 62%)' }}
+        className="forge-ext absolute left-1/2 top-[-20%] h-[70vw] w-[95vw] -translate-x-1/2 rounded-full blur-[130px]"
+        style={{ background: 'radial-gradient(closest-side, rgba(226,140,60,0.13), transparent 72%)' }}
       />
-      {/* Cool teal accent — confined to the technical zone (upper right, behind the pipeline) */}
+      {/* Neutral cool fill — keeps the lower page from going flat */}
       <div
-        className="absolute right-[6%] top-[6%] h-[32vw] w-[32vw] rounded-full blur-[130px] animate-drift-c"
-        style={{ background: 'radial-gradient(circle at center, rgba(95,208,190,0.10), transparent 64%)' }}
+        className="absolute -left-[18%] top-[52%] h-[48vw] w-[48vw] rounded-full blur-[150px]"
+        style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.025), transparent 68%)' }}
       />
-      {/* Warm depth haze behind the upper fold */}
-      <div
-        className="absolute inset-x-0 top-[8%] h-[40vh]"
-        style={{ background: 'radial-gradient(60% 100% at 50% 0%, rgba(230,177,126,0.05), transparent 70%)' }}
-      />
-      {/* Vignette — warm-leaning, focuses the center */}
+      {/* Vignette */}
       <div
         className="absolute inset-0"
-        style={{ background: 'radial-gradient(118% 92% at 50% 32%, transparent 44%, rgba(8,6,5,0.62) 100%)' }}
+        style={{ background: 'radial-gradient(120% 90% at 50% 28%, transparent 48%, rgba(0,0,0,0.5) 100%)' }}
       />
-      {/* Film grain */}
-      <div className="grain absolute inset-0" />
     </div>
   )
 }
