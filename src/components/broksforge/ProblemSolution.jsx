@@ -36,11 +36,7 @@ export default function ProblemSolution() {
               </p>
             ))}
             <ul className="mt-auto flex flex-col gap-2.5 border-t border-border-subtle pt-5">
-              {[
-                'Reproducible by construction — evaluations pin immutable versions',
-                'Objective comparison — leaderboards over precomputed summaries',
-                'Regressions caught by the pipeline, before users see them',
-              ].map((point) => (
+              {solution.points.map((point) => (
                 <li key={point} className="flex items-start gap-3 text-sm text-secondary">
                   <Check size={15} className="mt-0.5 flex-none text-status" aria-hidden="true" />
                   {point}

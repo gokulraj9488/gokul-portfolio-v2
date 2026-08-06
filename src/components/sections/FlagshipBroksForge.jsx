@@ -1,15 +1,12 @@
 import { motion } from 'framer-motion'
 import { ArrowRight, ExternalLink, Github } from 'lucide-react'
-import { broksforge } from '../../data/broksforge.js'
+import { broksforge, architecture, differentiator } from '../../data/broksforge.js'
 import { stagger, fadeUp, inView } from '../../lib/motion.js'
 import { Link } from '../../lib/router.jsx'
 import Badge from '../ui/Badge.jsx'
 import Reveal from '../ui/Reveal.jsx'
 import CountUp from '../ui/CountUp.jsx'
-import { Note, Sparks } from '../ui/Draft.jsx'
-
-// The engineering loop the platform owns — rendered as a quiet flow strip.
-const loop = ['Register', 'Version', 'Evaluate', 'Benchmark', 'Advise']
+import { Note, Sparks, SignalDot } from '../ui/Draft.jsx'
 
 export default function FlagshipBroksForge() {
   return (
@@ -41,35 +38,33 @@ export default function FlagshipBroksForge() {
               <span className="font-mono text-[0.72rem] text-tertiary">{broksforge.version} · {broksforge.license}</span>
             </div>
             <Badge tone="live">
-              <span className="h-1.5 w-1.5 rounded-full bg-status" aria-hidden="true" />
+              <SignalDot tone="status" />
               {broksforge.status}
             </Badge>
           </div>
 
           <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
-            {/* left: the loop + CTAs */}
+            {/* left: the differentiator + pillars + CTAs */}
             <div className="flex flex-col justify-between gap-8">
               <div>
-                <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-tertiary">
-                  The engineering loop it owns
+                <p className="font-display text-[1.15rem] font-semibold text-primary">{differentiator.claim}</p>
+                <p className="mt-2 max-w-lg text-sm leading-relaxed text-secondary">{differentiator.plainEnglish}</p>
+
+                <p className="mt-5 font-mono text-[0.72rem] uppercase tracking-[0.16em] text-tertiary">
+                  {architecture.pillarNote}
                 </p>
-                <ol className="mt-4 flex flex-wrap items-center gap-y-2.5">
-                  {loop.map((step, i) => (
+                <ol className="mt-3 flex flex-wrap items-center gap-y-2.5">
+                  {architecture.pillars.map((step, i) => (
                     <li key={step} className="flex items-center">
                       <span className="rounded-md border border-border-subtle bg-ink px-2.5 py-1.5 font-mono text-[0.74rem] text-primary">
                         {step}
                       </span>
-                      {i < loop.length - 1 && (
+                      {i < architecture.pillars.length - 1 && (
                         <ArrowRight size={12} className="mx-1.5 text-tertiary" aria-hidden="true" />
                       )}
                     </li>
                   ))}
                 </ol>
-                <p className="mt-5 max-w-lg text-sm leading-relaxed text-secondary">
-                  Framework-agnostic (LangGraph, CrewAI, AutoGen, Spring AI, custom HTTP) and
-                  provider-agnostic (OpenAI, Anthropic, Gemini, Groq, Ollama and more) — every
-                  provider behind one SPI, every result reproducible by construction.
-                </p>
               </div>
 
               <div className="flex flex-wrap gap-3">
@@ -110,7 +105,7 @@ export default function FlagshipBroksForge() {
               viewport={inView}
               className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border-subtle bg-border-subtle sm:grid-cols-3 lg:grid-cols-2"
             >
-              {broksforge.stats.map((s) => (
+              {broksforge.stats.slice(0, 4).map((s) => (
                 <motion.li key={s.label} variants={fadeUp} className="bg-ink p-4">
                   <span className="block font-display text-2xl font-semibold text-primary">
                     <CountUp value={s.value} prefix={s.prefix ?? ''} />

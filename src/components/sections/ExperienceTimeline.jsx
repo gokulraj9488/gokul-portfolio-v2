@@ -19,6 +19,7 @@ export default function ExperienceTimeline() {
           eyebrow="Experience"
           title="The work behind the workshop."
           subhead="Governed cloud data platforms by day; open-source AI infrastructure the rest of the time. Both are production systems with real users."
+          size="md"
         />
 
         <div ref={ref} className="relative mt-12 pl-8 sm:pl-10">

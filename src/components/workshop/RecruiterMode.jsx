@@ -3,9 +3,10 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { FileText, Github, Linkedin, Mail, ExternalLink } from 'lucide-react'
 import { useWorkshop } from '../../lib/workshop.jsx'
 import { useScrollLock } from '../../hooks/useScrollLock.js'
-import { identity, social } from '../../data/site.js'
+import { identity, social, buildLog } from '../../data/site.js'
 import { broksforge } from '../../data/broksforge.js'
 import { kuriosity } from '../../data/kuriosity.js'
+import { SignalDot } from '../ui/Draft.jsx'
 
 // WORKSHOP://RECRUITER — not a modal, an operating mode. Boots with an access
 // sequence, runs keyboard-first, leaves with ESC. The 30-second version.
@@ -21,10 +22,10 @@ const PROJECTS = [
   {
     name: "Brok's Forge",
     tag: 'FINAL BOSS',
-    line: 'Multi-tenant AI-agent engineering platform — registry, evaluation pipeline, benchmarking, regression detection, on-read advisor. Java 21 · Spring Boot · PostgreSQL · Next.js 15. Live on AWS.',
+    line: 'An AI Engineering Operating System — records the decisions and evidence behind an AI system, reasons over them deterministically. Zero LLM in the reasoning layer, on purpose. Java 21 · Spring Boot · PostgreSQL · Next.js 15. Live on AWS.',
     links: [
-      { label: 'live', href: 'https://broksforge.gokul.quest' },
-      { label: 'source', href: 'https://github.com/gokulraj9488/broks-forge' },
+      { label: 'live', href: broksforge.liveUrl },
+      { label: 'source', href: broksforge.githubUrl },
     ],
   },
   {
@@ -42,9 +43,10 @@ const PROJECTS = [
 ]
 
 const FACTS = [
-  '22 modules', '29 migrations', '13 LLM providers', '17 ADRs', 'production on AWS',
-  'Java 21', 'Spring Boot', 'PostgreSQL', 'Redis', 'Docker', 'React', 'Next.js',
-  'LLMs', 'RAG', 'evaluation', 'BigQuery', 'Looker', 'GCP',
+  '122 endpoints', '499 tests', '10 Maven modules', '5-layer architecture',
+  'zero LLM in reasoning', 'unattended deploy', 'Java 21', 'Spring Boot',
+  'PostgreSQL 16', 'Redis 7', 'Next.js 15', 'React', 'AWS EC2', 'Vercel',
+  'BigQuery', 'Looker', 'GCP',
 ]
 
 function OsSection({ label, children }) {
@@ -128,6 +130,7 @@ export default function RecruiterMode() {
       role="dialog"
       aria-modal="true"
       aria-label="Recruiter mode — workshop operating system"
+      data-lenis-prevent
     >
       {!booted ? (
         <button
@@ -152,7 +155,7 @@ export default function RecruiterMode() {
           ref={rootRef}
           initial={reduce ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={reduce ? { duration: 0.01 } : { type: 'spring', stiffness: 300, damping: 28 }}
+          transition={reduce ? { duration: 0.01 } : { type: 'spring', stiffness: 340, damping: 32, mass: 0.9 }}
           className="container-edge py-8 sm:py-10"
         >
           {/* OS header */}
@@ -175,9 +178,10 @@ export default function RecruiterMode() {
                 <p className="font-display text-2xl font-semibold text-primary">{identity.name}</p>
                 <p className="mt-1 text-sm text-secondary">AI Engineer — builds and operates AI systems end to end</p>
                 <p className="mt-3 flex items-center gap-2 font-mono text-[0.74rem] text-status">
-                  <span className="h-1.5 w-1.5 rounded-full bg-status" aria-hidden="true" />
+                  <SignalDot tone="status" />
                   available · {identity.location}
                 </p>
+                <p className="mt-2 font-mono text-[0.68rem] leading-relaxed text-tertiary">now: {buildLog.now}</p>
               </OsSection>
 
               <OsSection label="links">

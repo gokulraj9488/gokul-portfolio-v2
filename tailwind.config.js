@@ -17,7 +17,8 @@ export default {
         tertiary: '#8B867D', // meta / labels — 4.5:1+ on ink/surface (WCAG AA)
         ember: '#E2A45A', // THE accent — the forge. Heat, highlights, active states only.
         'ember-deep': '#B97F3A', // ember where solid contrast is needed
-        status: '#4ADE80', // live / passing
+        status: '#8BAD6A', // live / passing — a patina green, not a SaaS-dashboard green
+        blueprint: '#5F8AA3', // literal engineering drawings ONLY (layer stacks, topology) — the one cool color allowed
       },
       fontFamily: {
         display: ['"Space Grotesk Variable"', 'Space Grotesk', 'system-ui', 'sans-serif'],

@@ -74,6 +74,25 @@ export function Sparks({ count = 5, className = '' }) {
   )
 }
 
+// The one recurring "this is live" signal across the site — reused
+// deliberately everywhere a status dot appears (nav mark, hero, project
+// cards, recruiter status), so it reads as one visual language instead of
+// five slightly different one-offs. `pulse="breathe"` is the calm ambient
+// variant for marks that sit on screen permanently (the nav logo);
+// `pulse="ping"` (default) is the sharper "this specific thing is active
+// right now" signal — used honestly, only where the thing really is live.
+export function SignalDot({ tone = 'ember', pulse = 'ping', className = '' }) {
+  const dot = tone === 'status' ? 'bg-status' : 'bg-ember'
+  const ring = tone === 'status' ? 'bg-status' : pulse === 'breathe' ? 'bg-ember/60' : 'bg-ember'
+  const anim = pulse === 'breathe' ? 'animate-forge-breathe' : 'animate-ping'
+  return (
+    <span aria-hidden="true" className={`relative inline-flex h-1.5 w-1.5 flex-none ${className}`}>
+      <span className={`absolute inline-flex h-full w-full rounded-full opacity-50 ${anim} ${ring}`} />
+      <span className={`relative inline-flex h-full w-full rounded-full ${dot}`} />
+    </span>
+  )
+}
+
 // Inked drawing stamp. One per sheet, maximum.
 export function Stamp({ children, className = '' }) {
   return (

@@ -10,7 +10,7 @@ export default function About() {
     <section id="about" className="section border-t border-border-subtle">
       <div className="container-edge">
         <div className="relative">
-          <SectionHeader eyebrow={about.eyebrow} title={about.title} subhead={about.intro} />
+          <SectionHeader eyebrow={about.eyebrow} title={about.title} subhead={about.intro} size="md" />
           <Note rotate={2} className="mt-3 inline-block lg:absolute lg:right-8 lg:top-10 lg:mt-0">
             {about.note}
           </Note>

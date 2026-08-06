@@ -12,7 +12,7 @@ const SYSTEMS = [
   },
   {
     group: 'AI systems',
-    items: ['LLM APIs (OpenAI · Anthropic · Gemini · Groq · Ollama)', 'RAG pipelines', 'embeddings & vector search', 'evaluation harness', 'prompt / dataset versioning', 'LLM-as-judge metrics', 'LangGraph · LangChain (integration)'],
+    items: ['LLM APIs (Claude · GPT · Gemini · Groq · OpenRouter)', 'RAG pipelines', 'embeddings & vector search (Cohere · ChromaDB)', 'evaluation harness', 'prompt / dataset versioning', 'LLM-as-judge metrics'],
   },
   {
     group: 'Infrastructure & ops',
@@ -38,9 +38,10 @@ export default function SystemOverview() {
       <div className="container-edge">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <SectionHeader
-            eyebrow="System overview"
-            title="The full production surface."
-            subhead="Everything below has shipped in real systems — the platform, the products, or the day job. No aspirational logos."
+            eyebrow="Under the hood"
+            title="Not just two demos."
+            subhead="Brok's Forge and Kuriosity are the proof. Everything below is what makes them possible — shipped in the platform, the products, or the day job. No aspirational logos."
+            size="md"
           />
           <Note rotate={2} className="mb-1">no fluff. counted twice.</Note>
         </div>

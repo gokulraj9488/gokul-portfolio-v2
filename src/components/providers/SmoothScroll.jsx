@@ -52,10 +52,16 @@ export default function SmoothScroll({ children }) {
     <ReactLenis
       root
       options={{
-        lerp: 0.1, // responsiveness — higher = snappier; 0.1 is smooth but not floaty
-        duration: 1.1,
+        // No global `duration` here on purpose: Lenis re-triggers a full eased
+        // animation on every wheel tick when `duration` is set, which is what
+        // made wheel scroll feel dampened — each notch queued its own 1.1s
+        // catch-up. Pure `lerp` follows the input every frame instead, which is
+        // what makes trackpad flick-scroll already feel good (many tiny deltas
+        // arrive faster than any duration-eased catch-up could resolve). Anchor
+        // jumps (AnchorScroll above) still pass their own explicit `duration`.
+        lerp: 0.13,
         smoothWheel: true,
-        wheelMultiplier: 1,
+        wheelMultiplier: 1.2,
         touchMultiplier: 1.5,
       }}
     >

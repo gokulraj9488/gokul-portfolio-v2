@@ -3,16 +3,17 @@
 export const experience = [
   {
     company: "Brok's Forge — Independent / Open Source",
-    role: 'Creator & Maintainer · AI Engineering Platform',
+    role: 'Creator & Maintainer · AI Engineering Operating System',
     period: '2026 – Present',
     location: 'Remote',
     emphasis: true,
     points: [
-      'Designed and built a multi-tenant, provider-agnostic AI-agent engineering platform (Java 21 / Spring Boot, PostgreSQL, Next.js 15): agent registry, evaluation pipeline, benchmarking, regression detection and an on-read engineering advisor.',
-      'Architected it as a modular monolith — 22 modules with id-only boundaries — so any module extracts into a microservice mechanically.',
-      'Operate it in production on AWS EC2 (Docker, Nginx, Let’s Encrypt) with a Vercel frontend, Prometheus metrics and structured logging.',
+      "Designed and built Brok's Forge V2, an AI Engineering Operating System that records the decisions and evidence behind an AI system and answers engineering questions about it deterministically — no language model anywhere in the reasoning layer.",
+      'Architected a five-layer platform (Forge Kernel → Registry → AI Git → Forge Graph → Engineering Applications) on a deliberately framework-free, append-only event kernel with its own API/core/TCK/PostgreSQL-adapter split.',
+      'Built and hardened a fully unattended production deployment to AWS EC2 (Docker Compose, Nginx, Let’s Encrypt) with automatic image-tag rollback on a failed health gate, across 9 GitHub Actions workflows including CodeQL and dependency review.',
+      'Diagnosed and fixed a chain of live production incidents to root cause — a CI/CD pipeline that had never once executed, a health check silently skipped by a stdin-consumption bug, and Nginx serving 502s by caching a stale upstream IP after every deploy.',
     ],
-    tags: ['Java 21', 'Spring Boot', 'PostgreSQL', 'Next.js', 'AWS'],
+    tags: ['Java 21', 'Spring Boot 3.4', 'PostgreSQL 16', 'Next.js 15', 'AWS EC2'],
   },
   {
     company: 'Tata Consultancy Services',

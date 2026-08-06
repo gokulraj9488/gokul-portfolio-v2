@@ -19,7 +19,13 @@
     --text-secondary: #a6a29a;
     --text-tertiary: #8b867d;
     --ember: #e2a45a;
-    --status: #4ade80;
+    /* A muted patina green, not stock dashboard-green — "live" should still
+       read as a forge tool, not a SaaS status pill. */
+    --status: #8bad6a;
+    /* Reserved for literal engineering drawings only (architecture layers,
+       deployment topology) — the one place a cool color is allowed in an
+       otherwise warm, forged palette. Never used for UI chrome or accents. */
+    --blueprint: #5f8aa3;
   }
 
   html {
@@ -111,6 +117,14 @@
   .grid-bed {
     background-image: linear-gradient(rgba(255, 250, 240, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 250, 240, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* The cyan variant — reserved for literal engineering drawings (architecture
+     layers, deployment topology) only. Everywhere else stays warm. */
+  .blueprint-bed {
+    background-image: linear-gradient(rgba(95, 138, 163, 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(95, 138, 163, 0.09) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
@@ -319,6 +333,16 @@
 /* One ember drifting up from the bench edge during a pulse cycle. */
 .footer-ember {
   animation: spark-rise 2.2s ease-in 1 !important;
+}
+
+/* A whispered workshop-activity line, synced to the footer's pulse cycle —
+   appears, holds, gone. Never announced, never a toast. */
+@keyframes fade-hold {
+  0%, 100% { opacity: 0; }
+  18%, 75% { opacity: 1; }
+}
+.footer-activity {
+  animation: fade-hold 2.6s ease-in-out 1;
 }
 
 /* Tiny "now playing" bars for the workbench radio. */

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { security } from '../../data/broksforge.js'
+import { production } from '../../data/broksforge.js'
 import { stagger, fadeUp, inView } from '../../lib/motion.js'
 import SectionHeader from '../ui/SectionHeader.jsx'
 import Card from '../ui/Card.jsx'
@@ -9,9 +9,9 @@ export default function SecurityModel() {
     <section id="bf-security" className="section border-t border-border-subtle">
       <div className="container-edge">
         <SectionHeader
-          eyebrow={security.eyebrow}
-          title={security.title}
-          subhead="A platform that stores other teams' credentials and calls their endpoints outbound has to treat security as architecture, not review feedback."
+          eyebrow="Production security"
+          title="Locked down where it actually matters."
+          subhead="A platform that holds credentials and calls endpoints outbound has to treat security as infrastructure, not a checklist added at the end."
         />
 
         <motion.div
@@ -19,9 +19,9 @@ export default function SecurityModel() {
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-12 grid gap-4 sm:grid-cols-2"
         >
-          {security.items.map((s) => (
+          {production.security.map((s) => (
             <motion.div key={s.title} variants={fadeUp}>
               <Card spotlight className="h-full p-6">
                 <h3 className="font-display text-[1rem] font-semibold text-primary">{s.title}</h3>

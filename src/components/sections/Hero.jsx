@@ -8,7 +8,7 @@ import Magnetic from '../ui/Magnetic.jsx'
 import Tilt from '../ui/Tilt.jsx'
 import CountUp from '../ui/CountUp.jsx'
 import MetricStrip from '../ui/MetricStrip.jsx'
-import { DraftCorners, Crosshair, Note, Measure, TitleBlock, Sparks } from '../ui/Draft.jsx'
+import { DraftCorners, Crosshair, Note, Measure, TitleBlock, Sparks, SignalDot } from '../ui/Draft.jsx'
 
 // Dashed connector between bench nodes — data flowing along the loop.
 function FlowJoint() {
@@ -63,10 +63,7 @@ function BenchSheet() {
 
           {/* on the bench right now */}
           <p className="mt-5 flex items-center gap-2 font-mono text-[0.72rem] text-secondary">
-            <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ember opacity-50" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-ember" />
-            </span>
+            <SignalDot />
             now building: {hero.now}
           </p>
         </div>

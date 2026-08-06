@@ -9,7 +9,12 @@ import Radio from '../workshop/Radio.jsx'
 
 // The footer is not the end of the site — it's the workshop's quiet corner.
 // Three benches: the signature, the note pinned above the bench, and the tools
-// (radio · console · garage). Every ~18s one soft pulse suggests it's alive.
+// (radio · console · garage). Every ~18s one soft pulse suggests it's alive —
+// and every fourth pulse, rare enough to feel found rather than scheduled,
+// whispers one line of workshop activity. Not a dashboard — nothing here is a
+// live metric, it's the same ambient personality as the footer quips.
+
+const WORKSHOP_ACTIVITY = ['worker completed', 'benchmark archived', 'queue empty', 'nightly regression passed', 'kernel event appended']
 
 // Small tooltip that appears above a footer item on hover/focus.
 function FootTip({ tip, children }) {
@@ -32,7 +37,9 @@ export default function Footer() {
   // SSR renders quip[0]; the client draws a fresh one after hydration.
   const [quip, setQuip] = useState(footerQuips[0])
   const [pulsing, setPulsing] = useState(false)
+  const [activity, setActivity] = useState(null)
   const timers = useRef([])
+  const pulseCount = useRef(0)
 
   useEffect(() => {
     setQuip(footerQuips[Math.floor(Math.random() * footerQuips.length)])
@@ -43,7 +50,16 @@ export default function Footer() {
     if (reduce) return
     const interval = setInterval(() => {
       setPulsing(true)
-      timers.current.push(setTimeout(() => setPulsing(false), 2600))
+      pulseCount.current += 1
+      if (pulseCount.current % 4 === 0) {
+        setActivity(WORKSHOP_ACTIVITY[Math.floor(Math.random() * WORKSHOP_ACTIVITY.length)])
+      }
+      timers.current.push(
+        setTimeout(() => {
+          setPulsing(false)
+          setActivity(null)
+        }, 2600),
+      )
     }, 18000)
     return () => {
       clearInterval(interval)
@@ -60,6 +76,11 @@ export default function Footer() {
       {pulsing && (
         <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 overflow-visible">
           <span className="spark footer-ember" style={{ left: '18%', bottom: '90%' }} />
+          {activity && (
+            <span className="footer-activity absolute inset-x-0 top-0 text-center font-mono text-[0.62rem] tracking-wide text-tertiary/70">
+              {activity}
+            </span>
+          )}
         </span>
       )}
 

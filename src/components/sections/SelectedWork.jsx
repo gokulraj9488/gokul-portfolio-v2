@@ -8,6 +8,7 @@ import SectionHeader from '../ui/SectionHeader.jsx'
 import Reveal from '../ui/Reveal.jsx'
 import Badge from '../ui/Badge.jsx'
 import Card from '../ui/Card.jsx'
+import { SignalDot } from '../ui/Draft.jsx'
 
 export default function SelectedWork() {
   return (
@@ -17,6 +18,7 @@ export default function SelectedWork() {
           eyebrow="Also in production"
           title="Kuriosity — the other side of the loop."
           subhead="Brok's Forge evaluates AI systems; Kuriosity is one — a live RAG product I built and operate end to end. Building both is the point: I understand the platform and the workload it serves."
+          size="md"
         />
 
         {/* Kuriosity — secondary product card */}
@@ -27,7 +29,7 @@ export default function SelectedWork() {
               <span className="hidden font-mono text-[0.72rem] text-tertiary sm:inline">{kuriosity.tagline}</span>
             </div>
             <Badge tone="live">
-              <span className="h-1.5 w-1.5 rounded-full bg-status" aria-hidden="true" />
+              <SignalDot tone="status" />
               {kuriosity.status}
             </Badge>
           </div>

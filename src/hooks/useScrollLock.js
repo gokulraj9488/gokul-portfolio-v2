@@ -4,7 +4,11 @@ import { useLenis } from 'lenis/react'
 // Locks background scroll while `active` is true — Notion/Discord/macOS-sheet
 // behavior: the page underneath is frozen solid, and scrolling never leaks
 // through to it. Popup content scrolls independently via its own
-// `overflow-y-auto` + the `.scroll-contain` class (overscroll-behavior).
+// `overflow-y-auto` + the `.scroll-contain` class (overscroll-behavior) +
+// a `data-lenis-prevent` attribute — without that last one, Lenis's global
+// wheel listener (bound to `window`) hijacks the wheel event before the
+// browser ever gets to scroll the popup natively, so only dragging the
+// scrollbar thumb (which bypasses the wheel pipeline entirely) would work.
 //
 // `position: fixed` on <body> (not just `overflow: hidden`) is what actually
 // stops iOS Safari's rubber-band scroll from reaching the page behind a modal;

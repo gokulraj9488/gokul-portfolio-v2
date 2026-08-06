@@ -5,6 +5,7 @@ import { useScrolled } from '../../hooks/useScrolled.js'
 import { useActiveSection } from '../../hooks/useActiveSection.js'
 import { Link, useRouter } from '../../lib/router.jsx'
 import { useWorkshop } from '../../lib/workshop.jsx'
+import { SignalDot } from '../ui/Draft.jsx'
 
 // One nav for both pages. Route links go through the client router;
 // section links render as plain hash anchors on the home page (Lenis smooth-scrolls
@@ -68,10 +69,7 @@ export default function Navbar() {
             className="flex items-center gap-2.5 font-display text-[0.95rem] font-semibold text-primary"
             onMouseEnter={() => setSparkHovers((n) => n + 1)}
           >
-            <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-              <span className="absolute inline-flex h-full w-full animate-forge-breathe rounded-full bg-ember/60" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-ember" />
-            </span>
+            <SignalDot pulse="breathe" />
             Gokulraj
             <span className="hidden font-mono text-[0.66rem] font-normal lowercase tracking-[0.08em] text-tertiary sm:inline">
               / the workshop

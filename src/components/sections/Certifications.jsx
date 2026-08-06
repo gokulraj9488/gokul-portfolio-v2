@@ -8,7 +8,7 @@ export default function Certifications() {
   return (
     <section id="certifications" className="section border-t border-border-subtle">
       <div className="container-edge">
-        <SectionHeader eyebrow="Certifications" title="Credentials, quickly." />
+        <SectionHeader eyebrow="Certifications" title="Credentials, quickly." size="md" />
 
         <motion.ul
           variants={stagger(0.05)}

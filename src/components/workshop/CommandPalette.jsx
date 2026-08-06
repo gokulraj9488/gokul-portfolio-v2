@@ -4,6 +4,7 @@ import { useWorkshop } from '../../lib/workshop.jsx'
 import { useRouter } from '../../lib/router.jsx'
 import { useScrollLock } from '../../hooks/useScrollLock.js'
 import { identity, social, buildLog } from '../../data/site.js'
+import { COMMAND_MAP, HELP_GROUPS, AUTOCOMPLETE_POOL } from '../../lib/terminalCommands.js'
 
 // The workshop terminal — press "/". More Warp than Raycast: a scrollback, a
 // prompt with history + tab-completion, and commands that behave like an
@@ -19,30 +20,12 @@ const FORTUNES = [
   "today's probability of fixing the bug: 73%\nprobability of introducing another: 98%",
 ]
 
-// Primary commands only — this list also drives Tab-completion and the ghost
-// suggestion, so secret ones (sudo hire gokulraj, nyan, rickroll, whereami…)
-// stay unlisted on purpose. Aliases still work when typed; they're just not
-// what gets suggested.
-const HELP = [
-  ['help', 'this list'],
-  ['whoami', 'identity check'],
-  ['coffee', 'compile motivation'],
-  ['fortune', 'wisdom, randomly accessed'],
-  ['ride', 'take the GT650 out — aka garage, bike'],
-  ['benchmark', 'watch an evaluation run'],
-  ['ship', 'ship it'],
-  ['heat', 'light / cool the forge'],
-  ['fixit', 'incident response — aka panic'],
-  ['schematics', 'toggle developer mode — aka blueprint'],
-  ['speedrun', 'the 30-second version — aka recruiter'],
-  ['github', 'open the repos'],
-  ['resume', 'download résumé (+10 XP)'],
-  ['email', 'copy my email'],
-  ['git log', 'recent ships'],
-  ['clear', 'clean the scrollback'],
-  ['???', 'some commands are not listed'],
-]
-const PRIMARY_COMMANDS = HELP.map(([c]) => c).filter((c) => c !== '???')
+// The curated grouped help listing (SYSTEM/EVALUATION/ARCHITECTURE/PRODUCTION/
+// KNOWLEDGE/WORKSHOP/SESSION/MODES) plus the full command registry live in
+// terminalCommands.js. Autocomplete draws from AUTOCOMPLETE_POOL — every real
+// command, not just what's printed by `help` — but secret ones (sudo hire
+// gokulraj, nyan, rickroll, whereami…) are matched directly below and never
+// enter that pool. Aliases still work when typed; they're just not suggested.
 
 const HASHES = ['a3f9c2', 'c0ffee', '7f3a92', '5eed42']
 
@@ -108,9 +91,18 @@ export default function CommandPalette() {
       fn?.()
     }
 
+    // Commands living in terminalCommands.js — the real console surface
+    // (status, metrics, topology, trace, deploy, stack, and ~50 more).
+    const commandCtx = { push, line, later, close, navigate, ws }
+
     switch (cmd) {
       case 'help':
-        push(...HELP.map(([c, d]) => line(`  ${c.padEnd(12)} ${d}`)))
+        HELP_GROUPS.forEach((g, gi) => {
+          if (gi > 0) push(line(''))
+          push(line(g.title, 'dim'))
+          push(...g.rows.map(([c, d]) => line(`  ${c.padEnd(12)} ${d}`)))
+        })
+        push(line(''), line('  ???          some commands are not listed', 'dim'))
         break
       case 'whoami':
         push(
@@ -170,6 +162,7 @@ export default function CommandPalette() {
         break
       case 'git log':
       case 'git log --oneline':
+      case 'changelog':
         push(...buildLog.entries.map((e, i) => line(`${HASHES[i % HASHES.length]} (${e.date}) ${e.text.split('—')[0].trim()}`)))
         break
       case 'ship':
@@ -193,9 +186,6 @@ export default function CommandPalette() {
       case 'blueprint':
       case 'debug':
         close(() => ws.toggleDevMode())
-        break
-      case 'benchmark':
-        close(() => navigate('/broksforge#bf-run'))
         break
       case 'speedrun':
       case 'recruiter':
@@ -223,6 +213,7 @@ export default function CommandPalette() {
         })
         break
       case 'email':
+      case 'contact':
         navigator.clipboard
           ?.writeText(identity.email)
           .then(() => push(line(`copied ${identity.email} ✓`, 'ok')))
@@ -251,8 +242,14 @@ export default function CommandPalette() {
       case 'clear':
         setLines([])
         break
-      default:
-        push(line(`command not found: ${cmd}`, 'err'), line('try help. or sudo.', 'dim'))
+      default: {
+        const found = COMMAND_MAP.get(cmd)
+        if (found) {
+          found.run(commandCtx)
+        } else {
+          push(line(`command not found: ${cmd}`, 'err'), line('try help. or sudo.', 'dim'))
+        }
+      }
     }
   }
 
@@ -266,7 +263,13 @@ export default function CommandPalette() {
   }
 
   const q = input.trim().toLowerCase()
-  const suggestion = q ? PRIMARY_COMMANDS.find((c) => c !== q && c.startsWith(q)) : null
+  // Fish/Warp-style autosuggest: prefer what was actually typed before (most
+  // recent first), fall back to the known command list. History wins because
+  // that's what a real shell would do.
+  const suggestion = q
+    ? [...historyRef.current].reverse().find((c) => c.toLowerCase() !== q && c.toLowerCase().startsWith(q)) ??
+      AUTOCOMPLETE_POOL.find((c) => c !== q && c.startsWith(q))
+    : null
 
   const onInputKeyDown = (e) => {
     if (e.key === 'Escape') {
@@ -340,13 +343,16 @@ export default function CommandPalette() {
               tabIndex={0}
               role="log"
               aria-label="Terminal output"
+              data-lenis-prevent
               className="scroll-contain max-h-[42vh] min-h-[10rem] overflow-y-auto px-4 py-3 focus:outline-none"
             >
               <ol className="flex flex-col gap-1 font-mono text-[0.8rem] leading-relaxed">
                 {lines.map((l, i) => (
                   <li
                     key={l.id}
-                    className={`whitespace-pre-wrap break-words ${tone[l.tone]} ${l.tone === 'cmd' && i > 0 ? 'mt-2' : ''}`}
+                    className={`whitespace-pre-wrap break-words ${tone[l.tone]} ${l.tone === 'cmd' && i > 0 ? 'mt-2' : ''} ${
+                      l.tone === 'bar' ? 'tabular-nums' : ''
+                    }`}
                   >
                     {l.text}
                   </li>
@@ -367,15 +373,17 @@ export default function CommandPalette() {
                 $
               </span>
               <div className="relative min-w-0 flex-1">
-                {suggestion && (
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-pre font-mono text-[0.85rem]"
-                  >
-                    <span className="invisible">{input}</span>
-                    <span className="text-tertiary/50">{suggestion.slice(input.length)}</span>
-                  </div>
-                )}
+                {/* Block cursor, not a text-input caret — sits exactly after the
+                    typed text via an invisible mirror, so it reads like Warp/
+                    Ghostty rather than a form field. */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-pre font-mono text-[0.85rem]"
+                >
+                  <span className="invisible">{input}</span>
+                  <span className="term-cursor -ml-px inline-block h-[1.05em] w-[0.55ch] flex-none bg-ember/85" />
+                  {suggestion && <span className="text-tertiary/50">{suggestion.slice(input.length)}</span>}
+                </div>
                 <input
                   ref={inputRef}
                   value={input}
@@ -386,7 +394,7 @@ export default function CommandPalette() {
                   autoCorrect="off"
                   autoCapitalize="off"
                   spellCheck="false"
-                  className="relative z-10 w-full bg-transparent font-mono text-[0.85rem] text-primary caret-ember focus:outline-none"
+                  className="relative z-10 w-full bg-transparent font-mono text-[0.85rem] text-primary caret-transparent focus:outline-none"
                 />
               </div>
               {suggestion && (

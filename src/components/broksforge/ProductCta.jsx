@@ -16,11 +16,11 @@ export default function ProductCta() {
           <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-5">
             <span className="eyebrow">See it running</span>
             <h2 className="text-h1 font-semibold text-primary">
-              The platform is live. The architecture is public.
+              The platform is live. The source is public.
             </h2>
             <p className="text-body-lg text-secondary">
-              Register an agent, run an evaluation, read the Master Architecture document and the 17
-              ADRs behind it — everything on this page is verifiable.
+              Ask Brok a question, read the design constitution, or open the source — everything on
+              this page is verifiable, including the parts that admit what isn&apos;t finished yet.
             </p>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
               <a

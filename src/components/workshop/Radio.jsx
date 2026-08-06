@@ -8,7 +8,7 @@ import { useScrollLock } from '../../hooks/useScrollLock.js'
 // A compact drawer, not a redirect — nothing autoplays, every track opens in
 // Spotify on your terms. `dock` renders the big-touch-target mobile variant.
 
-const TRACKS = [
+export const TRACKS = [
   { title: 'Flashing Lights', artist: 'Kanye West', q: 'Flashing Lights Kanye West' },
   { title: 'No Church in the Wild', artist: 'JAY-Z · Kanye West', q: 'No Church in the Wild' },
   { title: 'House of Balloons', artist: 'The Weeknd', q: 'House of Balloons The Weeknd' },
@@ -80,6 +80,7 @@ export default function Radio({ dock = false, pulsing = false }) {
             exit={reduce ? undefined : { opacity: 0, scale: 0.97, y: 4 }}
             transition={reduce ? { duration: 0.01 } : { type: 'spring', stiffness: 420, damping: 30, mass: 0.7 }}
             style={{ transformOrigin: 'bottom' }}
+            data-lenis-prevent
             className={`scroll-contain absolute bottom-full z-[70] mb-3 max-h-[60vh] w-64 overflow-y-auto rounded-xl border border-border-subtle bg-raised/95 shadow-float backdrop-blur ${
               dock ? 'left-1/2 -translate-x-1/2' : 'right-0'
             }`}

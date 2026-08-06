@@ -5,7 +5,7 @@ import { easePremium, stagger, fadeUp } from '../../lib/motion.js'
 import Badge from '../ui/Badge.jsx'
 import Magnetic from '../ui/Magnetic.jsx'
 import CountUp from '../ui/CountUp.jsx'
-import { Crosshair, Note, Stamp, Ruler, Sparks } from '../ui/Draft.jsx'
+import { Crosshair, Note, Stamp, Ruler, Sparks, SignalDot } from '../ui/Draft.jsx'
 
 // The flagship's front door. Wordmark, claim, proof, CTAs — and the maker's hand.
 export default function ProductHero() {
@@ -27,7 +27,7 @@ export default function ProductHero() {
           className="flex flex-wrap items-center justify-center gap-2"
         >
           <Badge tone="live">
-            <span className="h-1.5 w-1.5 rounded-full bg-status" aria-hidden="true" />
+            <SignalDot tone="status" />
             {broksforge.status}
           </Badge>
           <Badge>{broksforge.version}</Badge>

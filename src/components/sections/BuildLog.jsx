@@ -12,7 +12,7 @@ export default function BuildLog() {
       <div className="container-edge">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div className="flex flex-col gap-6">
-            <SectionHeader eyebrow={buildLog.eyebrow} title={buildLog.title} />
+            <SectionHeader eyebrow={buildLog.eyebrow} title={buildLog.title} size="md" />
             {/* on the bench */}
             <div className="card relative overflow-hidden p-6">
               <div
